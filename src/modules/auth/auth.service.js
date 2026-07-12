@@ -17,7 +17,6 @@ export const syncUser = async (firebaseUser, body) => {
       email: firebaseUser.email,
       name: body.name,
       phone: body.phone,
-      farmName: body.farmName,
       address: body.address,
       photoUrl: body.photoUrl || "",
       role: "farmer",
@@ -32,7 +31,6 @@ export const syncUser = async (firebaseUser, body) => {
   return await updateUser(firebaseUser.uid, {
     name: body.name,
     phone: body.phone,
-    farmName: body.farmName,
     address: body.address,
     photoUrl: body.photoUrl || "",
     updatedAt: now,
