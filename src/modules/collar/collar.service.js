@@ -70,55 +70,70 @@ export const create = async (
   const secret =
     generateDeviceSecret();
 
-  const timestamp = now();
 
-  const collar = {
-    id: generateId("collar"),
 
+const timestamp = now();
+
+const collar = {
+
+  id: generateId("collar"),
+
+  ownerId,
+
+  ownerSerial: buildOwnerSerial(
     ownerId,
+    serial
+  ),
 
-    ownerSerial: buildOwnerSerial(
-      ownerId,
-      serial
-    ),
+  serialNumber: serial,
 
-    serialNumber: serial,
+  deviceSecret: secret,
 
-    deviceSecret: secret,
+  serialSecret: buildSerialSecret(
+    serial,
+    secret
+  ),
 
-    serialSecret: buildSerialSecret(
-      serial,
-      secret
-    ),
+  deviceName:
+    body.deviceName?.trim(),
 
-    deviceName: body.deviceName,
+  hardwareVersion:
+    body.hardwareVersion ?? null,
 
-    hardwareVersion:
-      body.hardwareVersion,
+  firmwareVersion:
+    body.firmwareVersion ?? null,
 
-    firmwareVersion:
-      body.firmwareVersion,
+  macAddress:
+    body.macAddress?.toUpperCase() ?? null,
 
-    macAddress:
-      body.macAddress,
+  simNumber:
+    body.simNumber ?? null,
 
-    simNumber:
-      body.simNumber,
+  signal: null,
 
-    battery: 100,
+  online: false,
 
-    signal: 100,
+  assigned: false,
 
-    assigned: false,
+  currentCowId: null,
 
-    status: collarStatus.AVAILABLE,
+  currentCowCode: null,
 
-    lastOnline: 0,
+  currentCowName: null,
 
-    createdAt: timestamp,
+  currentAssignmentId: null,
 
-    updatedAt: timestamp,
-  };
+  status: collarStatus.AVAILABLE,
+
+  lastOnline: null,
+
+  lastSync: null,
+
+  createdAt: timestamp,
+
+  updatedAt: timestamp,
+
+};
 
   return await repository.create(
     collar
@@ -172,13 +187,16 @@ export const update = async (
       );
   }
 
-  body.updatedAt = now();
+const updateData = {
+  ...body,
+  updatedAt: now(),
+};
 
   return await repository.update(
-    ownerId,
-    id,
-    body
-  );
+  ownerId,
+  id,
+  updateData
+);
 };
 
 /**
