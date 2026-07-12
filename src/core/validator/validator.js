@@ -1,14 +1,18 @@
 import AppError from "../exceptions/AppError.js";
 
 export const validate = (schema, data) => {
-  const result = schema.safeParse(data);
 
-  if (!result.success) {
-    return result.error.issues.map((issue) => ({
-      field: issue.path.join("."),
-      message: issue.message,
-    }));
-  }
+    const result = schema.safeParse(data);
 
-  return result.data;
+    if (!result.success) {
+
+        throw new AppError(
+            "Validation Error",
+            400,
+            result.error.issues
+        );
+
+    }
+
+    return result.data;
 };
