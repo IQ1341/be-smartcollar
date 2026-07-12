@@ -20,7 +20,33 @@ const app = express();
 
 app.use(helmet());
 
-app.use(cors());
+// CORS configuration for development (ports 3000 and 5500)
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // Allow localhost ports
+        const allowedOrigins = [
+            'http://localhost:3000',  // Backend itself
+            'http://localhost:5500',  // Go Live frontend
+            'http://127.0.0.1:3000',
+            'http://127.0.0.1:5500',
+            'http://localhost:8000'
+        ];
+        
+        if (allowedOrigins.includes(origin)) {
+            console.log('✅ CORS allowed for origin:', origin);
+            return callback(null, true);
+        } else {
+            console.log('❌ CORS blocked for origin:', origin);
+            return callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
 /*
 |--------------------------------------------------------------------------
