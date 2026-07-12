@@ -107,6 +107,12 @@ export const update = async (
   data
 ) => {
 
+  console.log("================================");
+  console.log("UPDATE DATA");
+  console.log("================================");
+  console.log(data);
+  console.log(Array.isArray(data));
+
   const cow = await findById(ownerId, id);
 
   if (!cow) {
